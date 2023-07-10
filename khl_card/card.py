@@ -1,10 +1,10 @@
 import json
 from collections.abc import Sequence
-from typing import Iterator, List, Optional, TypeVar, Union
+from typing import List, Union, TypeVar, Iterator, Optional
 
 from .color import Color
 from .modules import _Module
-from .types import NamedColor, SizeTypes, ThemeTypes
+from .types import SizeTypes, NamedColor, ThemeTypes
 
 __all__ = ["Card", "CardMessage"]
 
@@ -123,8 +123,12 @@ class Card(Sequence):
 
 class CardMessage(Sequence):
     card_list: List[Card]
+    """
+    构建卡片列表
+    """
 
     def __init__(self, *card: Card) -> None:
+        """构建卡片列表,"""
         self.card_list = list(card)
 
     def __getitem__(self, item: int) -> Card:
