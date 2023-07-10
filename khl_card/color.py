@@ -2,6 +2,7 @@ class Color:
     """
     添加颜色
     """
+
     R: int
     G: int
     B: int
@@ -15,9 +16,9 @@ class Color:
         :param b: 蓝
         """
         if r > 255 or g > 255 or b > 255:
-            raise Exception('RGB数字必须为0-255')
+            raise Exception("RGB数字必须为0-255")
         if r < 0 or g < 0 or b < 0:
-            raise Exception('RGB数字必须为0-255')
+            raise Exception("RGB数字必须为0-255")
         self.R = r
         self.G = g
         self.B = b
@@ -27,12 +28,12 @@ class Color:
         g = str(hex(self.G))[2:]
         b = str(hex(self.B))[2:]
         if len(r) == 1:
-            r = '0' + r
+            r = "0" + r
         if len(g) == 1:
-            g = '0' + g
+            g = "0" + g
         if len(b) == 1:
-            b = '0' + b
-        return f'#{r+g+b}'
+            b = "0" + b
+        return f"#{r+g+b}"
 
     def __repr__(self):
-        return f'Color(r={self.R}, g={self.G}, b={self.B})'
+        return f"Color(r={self.R}, g={self.G}, b={self.B})"

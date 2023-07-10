@@ -131,3 +131,4 @@ dmypy.json
 .idea/
 /main.py
 /main.py
+.pdm-python

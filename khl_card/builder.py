@@ -1,13 +1,39 @@
 from abc import ABC, abstractmethod
-from typing import Union, Optional, List
+from typing import List, Optional, Union
 
-from .modules import Header, Section, ImageGroup, Container, ActionGroup, Context, Divider, Invite, File, Video, Audio, \
-    Countdown
-from .accessory import PlainText, _BaseText, _BaseNonText, Paragraph, Image, Button, _BaseAccessory
-from .card import CardMessage, Card
+from .accessory import (
+    Button,
+    Image,
+    Paragraph,
+    PlainText,
+    _BaseAccessory,
+    _BaseNonText,
+    _BaseText,
+)
+from .card import Card, CardMessage
+from .modules import (
+    ActionGroup,
+    Audio,
+    Container,
+    Context,
+    Countdown,
+    Divider,
+    File,
+    Header,
+    ImageGroup,
+    Invite,
+    Section,
+    Video,
+)
 
-__all__ = ['CardMessageBuilder', 'CardBuilder', 'ImageGroupBuilder', 'ContainerBuilder', 'ContextBuilder',
-           'ActionGroupBuilder']
+__all__ = [
+    "CardMessageBuilder",
+    "CardBuilder",
+    "ImageGroupBuilder",
+    "ContainerBuilder",
+    "ContextBuilder",
+    "ActionGroupBuilder",
+]
 
 
 class AbstractBuilder(ABC):
@@ -17,7 +43,6 @@ class AbstractBuilder(ABC):
 
 
 class CardMessageBuilder(AbstractBuilder):
-
     def __init__(self) -> None:
         self.__card_message = CardMessage()
 
@@ -35,7 +60,7 @@ class CardBuilder(AbstractBuilder):
     def __init__(self) -> None:
         self._card = Card()
 
-    def header(self, text: Union[str, PlainText] = ''):
+    def header(self, text: Union[str, PlainText] = ""):
         """
         为卡片添加一个 header
 
@@ -44,8 +69,13 @@ class CardBuilder(AbstractBuilder):
         self._card.append(Header(text))
         return self
 
-    def section(self, text: Union[_BaseText, Paragraph], *, mode: str = 'right',
-                accessory: _BaseNonText = None):
+    def section(
+        self,
+        text: Union[_BaseText, Paragraph],
+        *,
+        mode: str = "right",
+        accessory: _BaseNonText = None,
+    ):
         """
         为卡片添加一个 section
 
@@ -199,7 +229,6 @@ class ImageGroupBuilder(MultiBuilder):
 
 
 class ContainerBuilder(MultiBuilder):
-
     def add(self, accessory: Image):
         self.elements.append(accessory)
         return self

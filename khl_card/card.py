@@ -1,13 +1,12 @@
 import json
 from collections.abc import Sequence
-from typing import List, Iterator, TypeVar
-from typing import Optional, Union
+from typing import Iterator, List, Optional, TypeVar, Union
 
 from .color import Color
 from .modules import _Module
-from .types import ThemeTypes, SizeTypes, NamedColor
+from .types import NamedColor, SizeTypes, ThemeTypes
 
-__all__ = ['Card', 'CardMessage']
+__all__ = ["Card", "CardMessage"]
 
 _T_co = TypeVar("_T_co", covariant=True)
 
@@ -16,14 +15,20 @@ class Card(Sequence):
     """
     构建卡片
     """
-    type: str = 'card'
+
+    type: str = "card"
     theme: str
     size: str
     color: Optional[str]
     modules: List[_Module]
 
-    def __init__(self, *modules: _Module, theme: Union[str, ThemeTypes] = ThemeTypes.PRIMARY,
-                 size: Union[str, SizeTypes] = SizeTypes.LG, color: Union[Color, NamedColor, str, None] = None) -> None:
+    def __init__(
+        self,
+        *modules: _Module,
+        theme: Union[str, ThemeTypes] = ThemeTypes.PRIMARY,
+        size: Union[str, SizeTypes] = SizeTypes.LG,
+        color: Union[Color, NamedColor, str, None] = None,
+    ) -> None:
         """
         构建卡片
 
@@ -44,7 +49,7 @@ class Card(Sequence):
         elif isinstance(color, NamedColor):
             self.color = color.value.__str__()
         else:
-            raise ValueError('incorrect color value: ' + self.color)
+            raise ValueError("incorrect color value: " + self.color)
 
     def __getitem__(self, item: int) -> _Module:
         return self.modules[item]
@@ -65,7 +70,7 @@ class Card(Sequence):
         return self.modules.__reversed__()
 
     def __repr__(self):
-        return 'Card(' + ', '.join([module.__repr__() for module in self.modules]) + ')'
+        return "Card(" + ", ".join([module.__repr__() for module in self.modules]) + ")"
 
     def count(self, value: _Module) -> int:
         return self.modules.count(value)
@@ -80,29 +85,29 @@ class Card(Sequence):
         """
         :return: 构造后卡片
         """
-        ret = {'type': self.type, 'theme': self.theme, 'size': self.size, 'modules': []}
+        ret = {"type": self.type, "theme": self.theme, "size": self.size, "modules": []}
         if self.color is not None:
-            ret['color'] = self.color
+            ret["color"] = self.color
         for i in self.modules:
-            ret['modules'].append(i.build())
+            ret["modules"].append(i.build())
         return ret
 
     def build_to_json(self) -> str:
         return json.dumps(self.build(), indent=4, ensure_ascii=False)
 
-    def clear(self) -> 'Card':
+    def clear(self) -> "Card":
         self.modules.clear()
         return self
 
-    def set_theme(self, theme: Union[str, ThemeTypes]) -> 'Card':
+    def set_theme(self, theme: Union[str, ThemeTypes]) -> "Card":
         self.theme = theme if isinstance(theme, str) else theme.value
         return self
 
-    def set_size(self, size: Union[str, SizeTypes]) -> 'Card':
+    def set_size(self, size: Union[str, SizeTypes]) -> "Card":
         self.size = size if isinstance(size, str) else size.value
         return self
 
-    def set_color(self, color: Union[str, Color, NamedColor, None]) -> 'Card':
+    def set_color(self, color: Union[str, Color, NamedColor, None]) -> "Card":
         if color is None:
             self.color = None
         elif isinstance(color, str):
@@ -112,7 +117,7 @@ class Card(Sequence):
         elif isinstance(color, NamedColor):
             self.color = color.value.__str__()
         else:
-            raise ValueError('incorrect color value: ' + self.color)
+            raise ValueError("incorrect color value: " + self.color)
         return self
 
 
@@ -141,7 +146,11 @@ class CardMessage(Sequence):
         return self.card_list.__reversed__()
 
     def __repr__(self):
-        return 'CardMessage(' + ', '.join([card.__repr__() for card in self.card_list]) + ')'
+        return (
+            "CardMessage("
+            + ", ".join([card.__repr__() for card in self.card_list])
+            + ")"
+        )
 
     def index(self, value: Card, start: int = ..., stop: int = ...) -> int:
         return self.card_list.index(value, start, stop)

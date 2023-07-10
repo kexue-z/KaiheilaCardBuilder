@@ -1,12 +1,33 @@
 import json
 import time
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 from typing import Optional, Tuple, Union
 
-from .accessory import _BaseText, _BaseNonText, _BaseAccessory, PlainText, Image, Button, Paragraph
+from .accessory import (
+    Button,
+    Image,
+    Paragraph,
+    PlainText,
+    _BaseAccessory,
+    _BaseNonText,
+    _BaseText,
+)
 
-__all__ = ['Header', 'Section', 'ImageGroup', 'Container', 'Context', 'ActionGroup', 'File', 'Audio', 'Video',
-           'Divider', 'Invite', 'Countdown', '_Module']
+__all__ = [
+    "Header",
+    "Section",
+    "ImageGroup",
+    "Container",
+    "Context",
+    "ActionGroup",
+    "File",
+    "Audio",
+    "Video",
+    "Divider",
+    "Invite",
+    "Countdown",
+    "_Module",
+]
 
 
 class _Module(ABC):
@@ -36,9 +57,10 @@ class Header(_Module):
 
     标题模块只能支持展示标准文本（text），突出标题样式。
     """
+
     text: PlainText
 
-    def __init__(self, text: Union[str, PlainText] = '') -> None:
+    def __init__(self, text: Union[str, PlainText] = "") -> None:
         """
         构建标题模块
 
@@ -46,14 +68,14 @@ class Header(_Module):
 
         :param text: 标题内容
         """
-        self.type = 'header'
+        self.type = "header"
         self.text = text if isinstance(text, PlainText) else PlainText(text)
 
     def build(self) -> dict:
         return {"type": self.type, "text": self.text.build()}
 
     def __repr__(self):
-        return f'Header({self.text.__repr__()})'
+        return f"Header({self.text.__repr__()})"
 
 
 class Section(_Module):
@@ -62,12 +84,18 @@ class Section(_Module):
 
     结构化的内容，显示文本+其它元素。
     """
+
     mode: str
     text: _BaseText
     accessory: _BaseNonText
 
-    def __init__(self, text: Union[_BaseText, Paragraph], *, mode: str = 'right',
-                 accessory: _BaseNonText = None) -> None:
+    def __init__(
+        self,
+        text: Union[_BaseText, Paragraph],
+        *,
+        mode: str = "right",
+        accessory: _BaseNonText = None,
+    ) -> None:
         """
         构建内容模块
 
@@ -77,20 +105,20 @@ class Section(_Module):
         :param text: 文本元素，和结构体
         :param accessory: 非文本元素
         """
-        self.type = 'section'
+        self.type = "section"
         self.mode = mode
         self.text = text
         self.accessory = accessory
 
     def build(self) -> dict:
-        ret = {'type': self.type, 'mode': self.mode, 'text': self.text.build()}
+        ret = {"type": self.type, "mode": self.mode, "text": self.text.build()}
         if self.accessory is None:
             return ret
-        ret['accessory'] = self.accessory.build()
+        ret["accessory"] = self.accessory.build()
         return ret
 
     def __repr__(self):
-        return f'Section(text={self.text.__repr__()}, mode=\'{self.mode}\', accessory={self.accessory.__repr__()})'
+        return f"Section(text={self.text.__repr__()}, mode='{self.mode}', accessory={self.accessory.__repr__()})"
 
 
 class ImageGroup(_Module):
@@ -99,6 +127,7 @@ class ImageGroup(_Module):
 
     1 到多张图片的组合
     """
+
     elements: Tuple[Image]
 
     def __init__(self, *elements: Image) -> None:
@@ -109,25 +138,30 @@ class ImageGroup(_Module):
 
         :param elements: 图片元素，其它元素无效
         """
-        self.type = 'image-group'
+        self.type = "image-group"
         if len(elements) > 9:
-            raise Exception('图片元素最多为9个')
+            raise Exception("图片元素最多为9个")
         self.elements = elements
 
     def build(self) -> dict:
-        ret = {'type': self.type, 'elements': []}
+        ret = {"type": self.type, "elements": []}
         for i in self.elements:
-            ret['elements'].append(i.build())
+            ret["elements"].append(i.build())
         return ret
 
     def __repr__(self):
-        return 'ImageGroup(' + ', '.join([image.__repr__() for image in self.elements]) + ')'
+        return (
+            "ImageGroup("
+            + ", ".join([image.__repr__() for image in self.elements])
+            + ")"
+        )
 
 
 class Container(_Module):
     """
     构建容器模块
     """
+
     elements: Tuple[Image]
 
     def __init__(self, *elements: Image) -> None:
@@ -138,19 +172,23 @@ class Container(_Module):
 
         :param elements: 图片元素，其它元素无效
         """
-        self.type = 'container'
+        self.type = "container"
         if len(elements) > 9:
-            raise Exception('图片元素最多为9个')
+            raise Exception("图片元素最多为9个")
         self.elements = elements
 
     def build(self) -> dict:
-        ret = {'type': self.type, 'elements': []}
+        ret = {"type": self.type, "elements": []}
         for i in self.elements:
-            ret['elements'].append(i.build())
+            ret["elements"].append(i.build())
         return ret
 
     def __repr__(self):
-        return 'Container(' + ', '.join([image.__repr__() for image in self.elements]) + ')'
+        return (
+            "Container("
+            + ", ".join([image.__repr__() for image in self.elements])
+            + ")"
+        )
 
 
 class ActionGroup(_Module):
@@ -159,6 +197,7 @@ class ActionGroup(_Module):
 
     交互模块中包含交互控件元素，目前支持的交互控件为按钮（button）
     """
+
     elements: Tuple[Button]
 
     def __init__(self, *elements: Button) -> None:
@@ -169,19 +208,23 @@ class ActionGroup(_Module):
 
         :param elements: 按钮元素，其他无效
         """
-        self.type = 'action-group'
+        self.type = "action-group"
         if len(elements) > 4:
-            raise Exception('按钮元素最多为4个')
+            raise Exception("按钮元素最多为4个")
         self.elements = elements
 
     def build(self) -> dict:
-        ret = {'type': self.type, 'elements': []}
+        ret = {"type": self.type, "elements": []}
         for i in self.elements:
-            ret['elements'].append(i.build())
+            ret["elements"].append(i.build())
         return ret
 
     def __repr__(self):
-        return 'ActionGroup(' + ', '.join([button.__repr__() for button in self.elements]) + ')'
+        return (
+            "ActionGroup("
+            + ", ".join([button.__repr__() for button in self.elements])
+            + ")"
+        )
 
 
 class Context(_Module):
@@ -190,6 +233,7 @@ class Context(_Module):
 
     展示图文混合的内容。
     """
+
     elements: Tuple[_BaseAccessory]
 
     def __init__(self, *elements: _BaseAccessory) -> None:
@@ -200,19 +244,23 @@ class Context(_Module):
 
         :param elements: 文本元素以及图片元素
         """
-        self.type = 'context'
+        self.type = "context"
         if len(elements) > 10:
-            raise Exception('元素最多为10个')
+            raise Exception("元素最多为10个")
         self.elements = elements
 
     def build(self) -> dict:
-        ret = {'type': self.type, 'elements': []}
+        ret = {"type": self.type, "elements": []}
         for i in self.elements:
-            ret['elements'].append(i.build())
+            ret["elements"].append(i.build())
         return ret
 
     def __repr__(self):
-        return 'Context(' + ', '.join([element.__repr__() for element in self.elements]) + ')'
+        return (
+            "Context("
+            + ", ".join([element.__repr__() for element in self.elements])
+            + ")"
+        )
 
 
 class Divider(_Module):
@@ -228,13 +276,13 @@ class Divider(_Module):
 
         展示分割线。
         """
-        self.type = 'divider'
+        self.type = "divider"
 
     def build(self) -> dict:
-        return {'type': self.type}
+        return {"type": self.type}
 
     def __repr__(self):
-        return 'Divider()'
+        return "Divider()"
 
 
 class Countdown(_Module):
@@ -243,11 +291,14 @@ class Countdown(_Module):
 
     展示倒计时。
     """
+
     endTime: int
     startTime: int
     mode: str
 
-    def __init__(self, endtime: int, mode: str, starttime: int = time.time() * 1000) -> None:
+    def __init__(
+        self, endtime: int, mode: str, starttime: int = time.time() * 1000
+    ) -> None:
         """
         构建倒计时模块
 
@@ -257,12 +308,12 @@ class Countdown(_Module):
         :param endtime: 到期的毫秒时间戳
         :param starttime: 起始的毫秒时间戳，仅当mode为second才有这个字段，默认为当前时间
         """
-        self.type = 'countdown'
-        if mode != 'day' and mode != 'hour' and mode != 'second':
-            raise Exception('mode必须为 day|hour|second')
+        self.type = "countdown"
+        if mode != "day" and mode != "hour" and mode != "second":
+            raise Exception("mode必须为 day|hour|second")
         self.mode = mode
         if endtime < starttime:
-            raise Exception('结束时间要大于开始时间')
+            raise Exception("结束时间要大于开始时间")
         self.endTime = endtime
         self.startTime = int(starttime)
 
@@ -272,7 +323,7 @@ class Countdown(_Module):
         :param mode: 倒计时模式
         :param end_time: 结束时间 ex: 2022-05-05 08:00:00
         """
-        time_stamp = time.mktime(time.strptime(end_time, '%Y-%m-%d %H:%M:%S'))
+        time_stamp = time.mktime(time.strptime(end_time, "%Y-%m-%d %H:%M:%S"))
         return cls(int(time_stamp * 1000), mode)
 
     @classmethod
@@ -280,14 +331,14 @@ class Countdown(_Module):
         """
         :param end_time: 结束时间 ex: 2022-05-05 08:00:00
         """
-        return cls.new_countdown(end_time, 'day')
+        return cls.new_countdown(end_time, "day")
 
     @classmethod
     def new_hour_countdown(cls, end_time: str):
         """
         :param end_time: 结束时间 ex: 2022-05-05 08:00:00
         """
-        return cls.new_countdown(end_time, 'hour')
+        return cls.new_countdown(end_time, "hour")
 
     @classmethod
     def new_second_countdown(cls, end_time: str, start_time: Optional[str] = None):
@@ -295,21 +346,26 @@ class Countdown(_Module):
         :param end_time: 结束时间 ex: 2022-05-05 08:00:00
         :param start_time: 开始时间 ex: 2022-05-05 08:00:00 留空则为当前时间
         """
-        time_stamp = time.mktime(time.strptime(end_time, '%Y-%m-%d %H:%M:%S'))
+        time_stamp = time.mktime(time.strptime(end_time, "%Y-%m-%d %H:%M:%S"))
         if start_time is None:
             start_time = time.time()
         else:
-            start_time = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
-        return cls(int(time_stamp * 1000), 'second', starttime=int(start_time * 1000))
+            start_time = time.mktime(time.strptime(start_time, "%Y-%m-%d %H:%M:%S"))
+        return cls(int(time_stamp * 1000), "second", starttime=int(start_time * 1000))
 
     def build(self) -> dict:
-        return {'type': self.type, 'mode': self.mode, 'endTime': self.endTime, 'startTime': self.startTime}
+        return {
+            "type": self.type,
+            "mode": self.mode,
+            "endTime": self.endTime,
+            "startTime": self.startTime,
+        }
 
     def __repr__(self):
-        if self.mode == 'second':
-            return f'Countdown(mode=\'{self.mode}\', endtime={self.endTime}, starttime={self.startTime})'
+        if self.mode == "second":
+            return f"Countdown(mode='{self.mode}', endtime={self.endTime}, starttime={self.startTime})"
         else:
-            return f'Countdown(mode=\'{self.mode}\', endtime={self.endTime})'
+            return f"Countdown(mode='{self.mode}', endtime={self.endTime})"
 
 
 class Invite(_Module):
@@ -318,6 +374,7 @@ class Invite(_Module):
 
     提供服务器邀请/语音频道邀请
     """
+
     code: str
 
     def __init__(self, code: str) -> None:
@@ -328,20 +385,21 @@ class Invite(_Module):
 
         :param code: 邀请链接或者邀请码
         """
-        self.type = 'invite'
+        self.type = "invite"
         self.code = code
 
     def build(self) -> dict:
-        return {'type': self.type, 'code': self.code}
+        return {"type": self.type, "code": self.code}
 
     def __repr__(self):
-        return f'Invite(code=\'{self.code}\')'
+        return f"Invite(code='{self.code}')"
 
 
 class _FileModule(_Module, ABC):
     """
     文件模块基类
     """
+
     src: str
     title: str
     type: str
@@ -351,7 +409,7 @@ class _FileModule(_Module, ABC):
         self.title = title
 
     def build(self) -> dict:
-        return {'type': self.type, 'src': self.src, 'title': self.title}
+        return {"type": self.type, "src": self.src, "title": self.title}
 
 
 class File(_FileModule):
@@ -367,10 +425,10 @@ class File(_FileModule):
         :param title: 标题
         """
         super().__init__(src, title)
-        self.type = 'file'
+        self.type = "file"
 
     def __repr__(self):
-        return f'File(src=\'{self.src}\', title=\'{self.title}\')'
+        return f"File(src='{self.src}', title='{self.title}')"
 
 
 class Video(_FileModule):
@@ -390,10 +448,10 @@ class Video(_FileModule):
         :param title: 标题
         """
         super().__init__(src, title)
-        self.type = 'video'
+        self.type = "video"
 
     def __repr__(self):
-        return f'Video(src=\'{self.src}\', title=\'{self.title}\')'
+        return f"Video(src='{self.src}', title='{self.title}')"
 
 
 class Audio(_FileModule):
@@ -402,6 +460,7 @@ class Audio(_FileModule):
 
     展示音频
     """
+
     cover: str
 
     def __init__(self, src: str, title: str, cover: Optional[str] = None) -> None:
@@ -415,13 +474,13 @@ class Audio(_FileModule):
         :param cover: 封面地址
         """
         super().__init__(src, title)
-        self.type = 'audio'
+        self.type = "audio"
         self.cover = cover
 
     def build(self) -> dict:
         ret = super().build()
-        ret['cover'] = self.cover if self.cover is not None else ''
+        ret["cover"] = self.cover if self.cover is not None else ""
         return ret
 
     def __repr__(self):
-        return f'Audio(src=\'{self.src}\', title=\'{self.title}\', cover=\'{self.cover}\')'
+        return f"Audio(src='{self.src}', title='{self.title}', cover='{self.cover}')"

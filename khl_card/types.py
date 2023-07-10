@@ -1,36 +1,36 @@
-from .color import Color
-
 from enum import Enum
 
-__all__ = ['ThemeTypes', 'SizeTypes', 'NamedColor', 'KmarkdownColors']
+from .color import Color
+
+__all__ = ["ThemeTypes", "SizeTypes", "NamedColor", "KmarkdownColors"]
 
 
 class ThemeTypes(Enum):
-    PRIMARY: str = 'primary'
-    SUCCESS: str = 'success'
-    DANGER: str = 'danger'
-    WARNING: str = 'warning'
-    INFO: str = 'info'
-    SECONDARY: str = 'secondary'
-    NONE: str = 'none'
+    PRIMARY: str = "primary"
+    SUCCESS: str = "success"
+    DANGER: str = "danger"
+    WARNING: str = "warning"
+    INFO: str = "info"
+    SECONDARY: str = "secondary"
+    NONE: str = "none"
 
 
 class SizeTypes(Enum):
-    XS: str = 'xs'
-    SM: str = 'sm'
-    MD: str = 'md'
-    LG: str = 'lg'
+    XS: str = "xs"
+    SM: str = "sm"
+    MD: str = "md"
+    LG: str = "lg"
 
 
 class KmarkdownColors(Enum):
-    DANGER = 'danger'
-    INFO = 'info'
-    PINK = 'pink'
-    PRIMARY = 'primary'
-    SECONDARY = 'secondary'
-    SUCCESS = 'success'
-    WARNING = 'warning'
-    NONE = 'none'
+    DANGER = "danger"
+    INFO = "info"
+    PINK = "pink"
+    PRIMARY = "primary"
+    SECONDARY = "secondary"
+    SUCCESS = "success"
+    WARNING = "warning"
+    NONE = "none"
 
 
 class NamedColor(Enum):
